@@ -20,8 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
     Route::get('/', [PostsController::class, 'index'])->name('posts.index');
-    Route::get('/find_by_id/{post}/{lang}', [PostsController::class, 'findById'])->name('posts.find-by-id');
+    Route::get('/find_by_id/{post}', [PostsController::class, 'findById'])->name('posts.find-by-id');
     Route::post('/', [PostsController::class, 'store'])->name('posts.store');
-    Route::put('/{post}/{lang}', [PostsController::class, 'update'])->name('posts.update');
-    Route::delete('/{post}/{lang}', [PostsController::class, 'destroy'])->name('posts.destroy');
+    Route::put('/{post}', [PostsController::class, 'update'])->name('posts.update');
+    Route::delete('/{post}', [PostsController::class, 'destroy'])->name('posts.destroy');
 });

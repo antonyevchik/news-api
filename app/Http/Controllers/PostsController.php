@@ -17,7 +17,6 @@ class PostsController extends Controller implements PostsInterface
 {
     public function index(IndexPostsRequest $request)
     {
-        dd($request->validated('page'));
         return PostResource::collection(
             PostTranslation::latest()
                 ->paginate($request->validated('per_page', 10) > 50 ? 50 : $request->validated('per_page'))

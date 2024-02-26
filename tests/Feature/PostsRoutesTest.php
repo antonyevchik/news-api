@@ -31,30 +31,29 @@ class PostsRoutesTest extends TestCase
      */
     public function test_post_index_returns_posts_list()
     {
-        $posts = $this->createPosts(5);
+        $postsCount = 7;
+        $posts = $this->createPosts($postsCount);
 
-        $this->getJson(route('posts.index'), ['page' => 1, 'per_page' => 5])
+        $this->json('GET', route('posts.index'), ['page' => 1, 'per_page' => $postsCount])
             ->assertStatus(200)
+            ->assertJsonCount($postsCount, 'data')
             ->assertJsonStructure([
-                'current_page',
                 'data' => [
                     '*' => [
                         'id',
                         'title',
                         'description',
                         'content',
+                        'tags',
                     ]
                 ],
-                'first_page_url',
-                'from',
-                'last_page',
-                'last_page_url',
-                'next_page_url',
-                'path',
-                'per_page',
-                'prev_page_url',
-                'to',
-                'total',
+                'meta' => [
+                    'current_page',
+                    'path',
+                    'per_page',
+                    'to',
+                    'total',
+                ]
             ]);
     }
 
@@ -65,7 +64,7 @@ class PostsRoutesTest extends TestCase
     {
         $post = $this->createPosts()->first();
 
-        $this->getJson(route('posts.find-by-id', ['post' => $post->id, 'lang' => 'en']))
+        $this->json('GET', route('posts.find-by-id', ['post' => $post->id]), ['lang' => 'en'])
             ->assertStatus(200)
             ->assertJson(
                 fn(AssertableJson $json) =>
@@ -88,35 +87,38 @@ class PostsRoutesTest extends TestCase
         $this->assertDatabaseHas('post_translations', ['title' => $title]);
     }
 
+    /**
+     * Test for updating post.
+     */
     public function test_post_can_be_updated()
     {
         $post = $this->createPosts()->first();
         $title = $post->translations()->first()->title;
         $lang = $post->translations()->first()->language->prefix;
 
-        $this->putJson(route('posts.update', ['post' => $post->id, 'lang' => $lang]), [
+        $this->putJson(route('posts.update', ['post' => $post->id]), [
             'title' => $newTitle = $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'content' => $this->faker->text,
+            'lang' => $lang,
         ])->assertStatus(201);
 
         $this->assertNotEquals($newTitle, $title);
         $this->assertDatabaseHas('post_translations', ['title' => $newTitle]);
     }
 
+    /**
+     * Test for deleting post.
+     */
     public function test_post_can_be_deleted()
     {
-        $post = Post::create();
-        $post->translations()->create([
-            'title' => $title = $this->faker->sentence,
-            'description' => $this->faker->sentence,
-            'content' => $this->faker->text,
-            'language_id' => Language::create(['prefix' => 'en'])->first()->id,
-        ]);
+        $post = $this->createPosts()->first();
+        $title = $post->translations()->first()->title;
+        $lang = $post->translations()->first()->language->prefix;
 
         $this->assertDatabaseHas('post_translations', ['title' => $title]);
 
-        $this->deleteJson(route('posts.destroy', ['post' => $post->id, 'lang' => 'en']))
+        $this->deleteJson(route('posts.destroy', ['post' => $post->id]), ['lang' => $lang])
             ->assertStatus(204);
 
         $this->assertDatabaseMissing('post_translations', ['post_id' => $post->id, 'title' => $title]);
