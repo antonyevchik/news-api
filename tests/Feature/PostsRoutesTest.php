@@ -32,7 +32,7 @@ class PostsRoutesTest extends TestCase
     public function test_post_index_returns_posts_list()
     {
         $postsCount = 7;
-        $posts = $this->createPosts($postsCount);
+        $this->createPosts($postsCount);
 
         $this->json('GET', route('posts.index'), ['page' => 1, 'per_page' => $postsCount])
             ->assertStatus(200)
@@ -85,6 +85,29 @@ class PostsRoutesTest extends TestCase
         ])->assertStatus(201);
 
         $this->assertDatabaseHas('post_translations', ['title' => $title]);
+    }
+
+    /**
+     * Test to add translation
+     */
+    public function test_it_is_possible_to_add_translation()
+    {
+        $post = $this->createPosts(1, 'ua')->first();
+
+        $this->assertDatabaseCount('post_translations', 1)
+            ->assertDatabaseHas('post_translations', ['post_id' => $post->id]);
+
+        $this->postJson(route('posts.store'), [
+            'post_id' => $post->id,
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->paragraph,
+            'content' => $this->faker->text,
+            'lang' => 'en',
+        ])->assertStatus(201);
+
+        $this->assertDatabaseCount('posts', 1);
+        $this->assertDatabaseCount('post_translations', 2)
+            ->assertDatabaseHas('post_translations', ['post_id' => $post->id]);
     }
 
     /**

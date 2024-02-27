@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePostRequest;
+use App\Http\Requests\FindPostByIdRequest;
 use App\Http\Requests\IndexPostsRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
@@ -23,12 +24,12 @@ class PostsController extends Controller implements PostsInterface
         );
     }
 
-    public function findById(Request $request, Post $post)
+    public function findById(FindPostByIdRequest $request, Post $post)
     {
         return PostResource::make(
             $post->translations()->whereHas(
                 'language',
-                fn($query) => $query->where('prefix', $request->lang)
+                fn($query) => $query->where('prefix', $request->validated('lang'))
             )
                 ->first()
         );
@@ -36,13 +37,7 @@ class PostsController extends Controller implements PostsInterface
 
     public function store(CreatePostRequest $request)
     {
-        $post = Post::create();
-        $post->translations()->create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'content' => $request->content,
-            'language_id' => Language::where('prefix', $request->lang)->first()?->id || Language::create(['prefix' => $request->lang])->first()->id,
-        ]);
+        $post = Post::createFromRequest($request->validated());
 
         return response()->json(['message' => 'Post created!'], 201);
     }
