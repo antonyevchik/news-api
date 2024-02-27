@@ -25,6 +25,7 @@ class UpdatePostRequest extends FormRequest
             'title' => 'string|min:5',
             'description' => 'string',
             'content' => 'string',
+            'tags' => 'sometimes|array',
         ];
     }
 }

@@ -39,21 +39,15 @@ class PostsController extends Controller implements PostsInterface
     {
         $post = Post::createFromRequest($request->validated());
 
-        return response()->json(['message' => 'Post created!'], 201);
+        return response()->json([
+            'message' => 'Post created!',
+            'post_id' => $post->id
+        ], 201);
     }
 
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->translations()
-            ->whereHas(
-                'language',
-                fn($query) => $query->where('prefix', $request->lang)
-            )
-            ->update([
-                'title' => $request->title,
-                'description' => $request->description,
-                'content' => $request->content,
-            ]);
+        Post::updateFromRequest($request, $post);
 
         return response()->json(['message' => 'Post updated!'], 201);
     }

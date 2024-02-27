@@ -27,6 +27,7 @@ class CreatePostRequest extends FormRequest
             'description' => 'required|string',
             'content' => 'required|string',
             'lang' => 'required|string|min:2',
+            'tags' => 'sometimes|array',
         ];
     }
 }

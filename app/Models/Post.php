@@ -31,6 +31,42 @@ class Post extends Model
             'language_id' => Language::where('prefix', $request['lang'])->first()?->id || Language::create(['prefix' => $request['lang']])->first()->id,
         ]);
 
+        if (isset($request['tags'])) {
+            $tags = collect($request['tags'])
+                ->map(
+                    fn($tag) =>
+                    Tag::firstOrCreate(['name' => $tag])->id
+                );
+
+            $post->tags()->sync($tags);
+        }
+
+        return $post;
+    }
+
+    public static function updateFromRequest($request, $post)
+    {
+        $post->translations()
+            ->whereHas(
+                'language',
+                fn($query) => $query->where('prefix', $request['lang'])
+            )
+            ->update([
+                'title' => $request['title'],
+                'description' => $request['description'],
+                'content' => $request['content'],
+            ]);
+
+        if (isset($request['tags'])) {
+            $tags = collect($request['tags'])
+                ->map(
+                    fn($tag) =>
+                    Tag::firstOrCreate(['name' => $tag])->id
+                );
+
+            $post->tags()->sync($tags);
+        }
+
         return $post;
     }
 }

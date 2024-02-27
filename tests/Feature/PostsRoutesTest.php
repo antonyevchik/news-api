@@ -82,9 +82,13 @@ class PostsRoutesTest extends TestCase
             'description' => $this->faker->sentence,
             'content' => $this->faker->text,
             'lang' => 'ua',
+            'tags' => ['tag1', 'tag2', 'tag3'],
         ])->assertStatus(201);
 
         $this->assertDatabaseHas('post_translations', ['title' => $title]);
+        $this->assertDatabaseHas('tags', ['name' => 'tag3']);
+        $this->assertDatabaseCount('tags', 3);
+        $this->assertDatabaseCount('post_tags', 3);
     }
 
     /**
