@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexTagsRequest;
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -26,5 +28,24 @@ class TagsController extends Controller
                     $request->validated('page', 1)
                 )
         );
+    }
+
+    public function store(StoreTagRequest $request)
+    {
+        return TagResource::make(Tag::create($request->validated()));
+    }
+
+    public function update(UpdateTagRequest $request, Tag $tag)
+    {
+        $tag->update($request->validated());
+
+        return response()->json(['message' => 'Tag name updated!'], 201);
+    }
+
+    public function destroy(Tag $tag)
+    {
+        $tag->delete();
+
+        return response()->json(['message' => 'Tag deleted'], 204);
     }
 }

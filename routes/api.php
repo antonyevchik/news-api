@@ -30,5 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'tags'], function () {
         Route::get('/', [TagsController::class, 'index'])->name('tags.index');
+        Route::post('/', [TagsController::class, 'store'])->name('tags.store');
+        Route::put('/{tag}', [TagsController::class, 'update'])->name('tags.update');
+        Route::delete('/{tag}', [TagsController::class, 'destroy'])->name('tags.destroy');
     });
 });

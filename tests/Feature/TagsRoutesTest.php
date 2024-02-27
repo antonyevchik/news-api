@@ -53,61 +53,51 @@ class TagsRoutesTest extends TestCase
             ]);
     }
 
-    // /**
-    //  * Test for adding post.
-    //  */
-    // public function test_post_can_be_created()
-    // {
-    //     $this->postJson(route('posts.store'), [
-    //         'title' => $title = $this->faker->sentence,
-    //         'description' => $this->faker->sentence,
-    //         'content' => $this->faker->text,
-    //         'lang' => 'ua',
-    //         'tags' => ['tag1', 'tag2', 'tag3'],
-    //     ])->assertStatus(201);
+    /**
+     * Test for adding tag.
+     */
+    public function test_tag_can_be_created()
+    {
+        $this->postJson(route('tags.store'), [
+            'name' => $name = $this->faker->word,
+        ])->assertStatus(201);
 
-    //     $this->assertDatabaseHas('post_translations', ['title' => $title]);
-    //     $this->assertDatabaseHas('tags', ['name' => 'tag3']);
-    //     $this->assertDatabaseCount('tags', 3);
-    //     $this->assertDatabaseCount('post_tags', 3);
-    // }
+        $this->assertDatabaseHas('tags', ['name' => $name]);
+    }
 
-    // /**
-    //  * Test for updating post.
-    //  */
-    // public function test_post_can_be_updated()
-    // {
-    //     $post = $this->createPosts()->first();
-    //     $title = $post->translations()->first()->title;
-    //     $lang = $post->translations()->first()->language->prefix;
+    /**
+     * Test for updating tag.
+     */
+    public function test_tag_can_be_updated()
+    {
+        $tag = $this->createtags()->first();
+        $name = $tag->name;
 
-    //     $this->putJson(route('posts.update', ['post' => $post->id]), [
-    //         'title' => $newTitle = $this->faker->sentence,
-    //         'description' => $this->faker->paragraph,
-    //         'content' => $this->faker->text,
-    //         'lang' => $lang,
-    //     ])->assertStatus(201);
+        $this->putJson(route('tags.update', ['tag' => $tag->id]), [
+            'name' => $newName = $this->faker->word,
+        ])->assertStatus(201);
 
-    //     $this->assertNotEquals($newTitle, $title);
-    //     $this->assertDatabaseHas('post_translations', ['title' => $newTitle]);
-    // }
+        dd($newName);
 
-    // /**
-    //  * Test for deleting post.
-    //  */
-    // public function test_post_can_be_deleted()
-    // {
-    //     $post = $this->createPosts()->first();
-    //     $title = $post->translations()->first()->title;
-    //     $lang = $post->translations()->first()->language->prefix;
+        $this->assertNotEquals($newName, $name);
+        $this->assertDatabaseHas('tags', ['name' => $newName]);
+    }
 
-    //     $this->assertDatabaseHas('post_translations', ['title' => $title]);
+    /**
+     * Test for deleting tag.
+     */
+    public function test_post_can_be_deleted()
+    {
+        $tag = $this->createTags()->first();
+        $name = $tag->name;
 
-    //     $this->deleteJson(route('posts.destroy', ['post' => $post->id]), ['lang' => $lang])
-    //         ->assertStatus(204);
+        $this->assertDatabaseHas('tags', ['name' => $name]);
 
-    //     $this->assertDatabaseMissing('post_translations', ['post_id' => $post->id, 'title' => $title]);
-    // }
+        $this->deleteJson(route('tags.destroy', ['tag' => $tag->id]))
+            ->assertStatus(204);
+
+        $this->assertDatabaseMissing('tags', ['id' => $tag->id, 'name' => $name]);
+    }
 
     public function createTags(int $tagsCount = 1, int $postsCount = 1, $lang = 'en')
     {
