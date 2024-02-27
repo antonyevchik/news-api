@@ -7,10 +7,8 @@ use App\Http\Requests\FindPostByIdRequest;
 use App\Http\Requests\IndexPostsRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
-use App\Models\Language;
 use App\Models\Post;
 use App\Models\PostTranslation;
-use Illuminate\Http\Request;
 use App\Http\Interfaces\PostsInterface;
 
 
@@ -20,7 +18,12 @@ class PostsController extends Controller implements PostsInterface
     {
         return PostResource::collection(
             PostTranslation::latest()
-                ->paginate($request->validated('per_page', 10) > 50 ? 50 : $request->validated('per_page'))
+                ->paginate(
+                    $request->validated('per_page', 10) > 50 ? 50 : $request->validated('per_page'),
+                    ['*'],
+                    'posts',
+                    $request->validated('page', 1)
+                )
         );
     }
 
