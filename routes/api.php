@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\PostsSearchController;
 use App\Http\Controllers\TagsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{tag}', [TagsController::class, 'update'])->name('tags.update');
         Route::delete('/{tag}', [TagsController::class, 'destroy'])->name('tags.destroy');
     });
+
+    Route::get('/posts/search', [PostsSearchController::class, 'search'])->name('posts.search');
 });

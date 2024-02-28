@@ -77,8 +77,6 @@ class TagsRoutesTest extends TestCase
             'name' => $newName = $this->faker->word,
         ])->assertStatus(201);
 
-        dd($newName);
-
         $this->assertNotEquals($newName, $name);
         $this->assertDatabaseHas('tags', ['name' => $newName]);
     }
