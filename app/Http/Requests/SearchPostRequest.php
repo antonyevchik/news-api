@@ -22,7 +22,7 @@ class SearchPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'sometimes|string'
         ];
     }
 }
