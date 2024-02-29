@@ -16,7 +16,7 @@ class PostsRoutesTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    protected $user;
+    protected User $user;
 
     protected function setUp(): void
     {
