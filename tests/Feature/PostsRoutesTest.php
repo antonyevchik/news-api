@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Language;
+use App\Models\Post;
 use App\Models\PostTranslation;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use App\Models\User;
-use App\Models\Post;
-use App\Models\Language;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -67,7 +67,7 @@ class PostsRoutesTest extends TestCase
         $this->json('GET', route('posts.find-by-id', ['post' => $post->id]), ['lang' => 'en'])
             ->assertStatus(200)
             ->assertJson(
-                fn(AssertableJson $json) =>
+                fn (AssertableJson $json) =>
                 $json->where('data.title', $post->translations()->first()->title)
             );
     }
@@ -78,11 +78,11 @@ class PostsRoutesTest extends TestCase
     public function test_post_can_be_created()
     {
         $this->postJson(route('posts.store'), [
-            'title' => $title = $this->faker->sentence,
+            'title'       => $title = $this->faker->sentence,
             'description' => $this->faker->sentence,
-            'content' => $this->faker->text,
-            'lang' => 'ua',
-            'tags' => ['tag1', 'tag2', 'tag3'],
+            'content'     => $this->faker->text,
+            'lang'        => 'ua',
+            'tags'        => ['tag1', 'tag2', 'tag3'],
         ])->assertStatus(201);
 
         $this->assertDatabaseHas('post_translations', ['title' => $title]);
@@ -102,11 +102,11 @@ class PostsRoutesTest extends TestCase
             ->assertDatabaseHas('post_translations', ['post_id' => $post->id]);
 
         $this->postJson(route('posts.store'), [
-            'post_id' => $post->id,
-            'title' => $this->faker->sentence,
+            'post_id'     => $post->id,
+            'title'       => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'content' => $this->faker->text,
-            'lang' => 'en',
+            'content'     => $this->faker->text,
+            'lang'        => 'en',
         ])->assertStatus(201);
 
         $this->assertDatabaseCount('posts', 1);
@@ -119,15 +119,15 @@ class PostsRoutesTest extends TestCase
      */
     public function test_post_can_be_updated()
     {
-        $post = $this->createPosts()->first();
+        $post  = $this->createPosts()->first();
         $title = $post->translations()->first()->title;
-        $lang = $post->translations()->first()->language->prefix;
+        $lang  = $post->translations()->first()->language->prefix;
 
         $this->putJson(route('posts.update', ['post' => $post->id]), [
-            'title' => $newTitle = $this->faker->sentence,
+            'title'       => $newTitle = $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'content' => $this->faker->text,
-            'lang' => $lang,
+            'content'     => $this->faker->text,
+            'lang'        => $lang,
         ])->assertStatus(201);
 
         $this->assertNotEquals($newTitle, $title);
@@ -139,9 +139,9 @@ class PostsRoutesTest extends TestCase
      */
     public function test_post_can_be_deleted()
     {
-        $post = $this->createPosts()->first();
+        $post  = $this->createPosts()->first();
         $title = $post->translations()->first()->title;
-        $lang = $post->translations()->first()->language->prefix;
+        $lang  = $post->translations()->first()->language->prefix;
 
         $this->assertDatabaseHas('post_translations', ['title' => $title]);
 

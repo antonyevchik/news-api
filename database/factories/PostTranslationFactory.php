@@ -18,9 +18,9 @@ class PostTranslationFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
+            'title'       => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'content' => $this->faker->text,
+            'content'     => $this->faker->text,
             'language_id' => Language::firstOrCreate(['prefix' => 'en'])->first()->id,
         ];
     }

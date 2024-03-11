@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Interfaces\PostsInterface;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\FindPostByIdRequest;
 use App\Http\Requests\IndexPostsRequest;
@@ -9,8 +10,6 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\PostTranslation;
-use App\Http\Interfaces\PostsInterface;
-
 
 class PostsController extends Controller implements PostsInterface
 {
@@ -32,7 +31,7 @@ class PostsController extends Controller implements PostsInterface
         return PostResource::make(
             $post->translations()->whereHas(
                 'language',
-                fn($query) => $query->where('prefix', $request->validated('lang'))
+                fn ($query) => $query->where('prefix', $request->validated('lang'))
             )
                 ->first()
         );

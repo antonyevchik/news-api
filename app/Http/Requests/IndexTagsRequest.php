@@ -22,8 +22,8 @@ class IndexTagsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_id' => 'sometimes|numeric',
-            'page' => 'required|numeric',
+            'post_id'  => 'sometimes|numeric',
+            'page'     => 'required|numeric',
             'per_page' => 'sometimes|numeric',
         ];
     }
