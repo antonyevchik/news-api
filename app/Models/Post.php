@@ -24,16 +24,16 @@ class Post extends Model
     {
         $post = isset($request['post_id']) ? Post::findOrFail($request['post_id'])->first() : Post::create();
         $post->translations()->create([
-            'title' => $request['title'],
+            'title'       => $request['title'],
             'description' => $request['description'],
-            'content' => $request['content'],
+            'content'     => $request['content'],
             'language_id' => Language::where('prefix', $request['lang'])->first()?->id || Language::create(['prefix' => $request['lang']])->first()->id,
         ]);
 
         if (isset($request['tags'])) {
             $tags = collect($request['tags'])
                 ->map(
-                    fn($tag) =>
+                    fn ($tag) =>
                     Tag::firstOrCreate(['name' => $tag])->id
                 );
 
@@ -48,18 +48,18 @@ class Post extends Model
         $post->translations()
             ->whereHas(
                 'language',
-                fn($query) => $query->where('prefix', $request['lang'])
+                fn ($query) => $query->where('prefix', $request['lang'])
             )
             ->update([
-                'title' => $request['title'],
+                'title'       => $request['title'],
                 'description' => $request['description'],
-                'content' => $request['content'],
+                'content'     => $request['content'],
             ]);
 
         if (isset($request['tags'])) {
             $tags = collect($request['tags'])
                 ->map(
-                    fn($tag) =>
+                    fn ($tag) =>
                     Tag::firstOrCreate(['name' => $tag])->id
                 );
 

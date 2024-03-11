@@ -22,7 +22,7 @@ class IndexPostsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'required|numeric',
+            'page'     => 'required|numeric',
             'per_page' => 'sometimes|numeric',
         ];
     }

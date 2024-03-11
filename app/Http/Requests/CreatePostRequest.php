@@ -22,12 +22,12 @@ class CreatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_id' => 'sometimes|numeric',
-            'title' => 'required|string|min:5',
+            'post_id'     => 'sometimes|numeric',
+            'title'       => 'required|string|min:5',
             'description' => 'required|string',
-            'content' => 'required|string',
-            'lang' => 'required|string|min:2',
-            'tags' => 'sometimes|array',
+            'content'     => 'required|string',
+            'lang'        => 'required|string|min:2',
+            'tags'        => 'sometimes|array',
         ];
     }
 }

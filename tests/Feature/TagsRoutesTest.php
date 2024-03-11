@@ -70,7 +70,7 @@ class TagsRoutesTest extends TestCase
      */
     public function test_tag_can_be_updated()
     {
-        $tag = $this->createtags()->first();
+        $tag  = $this->createtags()->first();
         $name = $tag->name;
 
         $this->putJson(route('tags.update', ['tag' => $tag->id]), [
@@ -86,7 +86,7 @@ class TagsRoutesTest extends TestCase
      */
     public function test_post_can_be_deleted()
     {
-        $tag = $this->createTags()->first();
+        $tag  = $this->createTags()->first();
         $name = $tag->name;
 
         $this->assertDatabaseHas('tags', ['name' => $name]);
